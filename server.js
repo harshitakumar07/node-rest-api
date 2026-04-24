@@ -29,7 +29,10 @@ app.delete('/users/:id', (req, res) => {
     res.json({ message: `User with ID ${userId} deleted` });
 });
 
+//Important for Render
+const port = process.env.port || 3000; 
+
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server running on PORT $ {port}`);
 });
