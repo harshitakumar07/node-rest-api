@@ -1,37 +1,63 @@
-// Import the Express module
-const express = require('express');
+const express = require("express");
 const app = express();
 
+// Enable JSON parsing
 app.use(express.json());
 
-// Define a route for GET requests
-app.get('/users', (req, res) => {
-    res.json({ message: 'Returning list of users' });
+// Temporary in-memory data (acts like a fake database)
+let users = [
+    { id: 1, name: "John" },
+    { id: 2, name: "Jane" }
+];
+
+// Health check route (API status)
+app.get("/", (req, res) => {
+    res.send("API is live 🚀");
 });
 
-// Define a route for POST requests
-app.post('/users', (req, res) => {
-    const newUser = req.body;
-    res.json({ message: 'User created', user: newUser });
+// READ all users
+app.get("/users", (req, res) => {
+    res.json(users);
 });
 
-// Define a route for PUT requests
-app.put('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    const updatedUser = req.body;
-    res.json({ message: `User with ID ${userId} updated`, updatedUser });
+// CREATE a new user
+app.post("/users", (req, res) => {
+    const newUser = {
+        id: users.length + 1,
+        name: req.body.name
+    };
+
+    users.push(newUser);
+    res.status(201).json(newUser);
 });
 
-// Define a route for DELETE requests
-app.delete('/users/:id', (req, res) => {
-    const userId = req.params.id;
-    res.json({ message: `User with ID ${userId} deleted` });
+// UPDATE a user
+app.put("/users/:id", (req, res) => {
+    const id = parseInt(req.params.id);
+
+    const user = users.find(u => u.id === id);
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    user.name = req.body.name;
+    res.json({ message: "User updated", user });
 });
 
-//Important for Render
-const PORT = process.env.PORT || 3000; 
+// DELETE a user
+app.delete("/users/:id", (req, res) => {
+    const id = parseInt(req.params.id);
 
-// Start the server
+    users = users.filter(u => u.id !== id);
+
+    res.json({ message: "User deleted" });
+});
+
+// Port setup for local + Render
+const PORT = process.env.PORT || 3000;
+
+// Start server
 app.listen(PORT, () => {
     console.log(`Server running on PORT $ {PORT}`);
 });
