@@ -1,7 +1,6 @@
 // Import the Express module
 const express = require('express');
 const app = express();
-const port = 3000;
 
 app.use(express.json());
 
@@ -30,9 +29,9 @@ app.delete('/users/:id', (req, res) => {
 });
 
 //Important for Render
-const port = process.env.port || 3000; 
+const PORT = process.env.PORT || 3000; 
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running on PORT $ {port}`);
+app.listen(PORT, () => {
+    console.log(`Server running on PORT $ {PORT}`);
 });
